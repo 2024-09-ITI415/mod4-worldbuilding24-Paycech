@@ -6,9 +6,18 @@ using UnityEngine.UI;
 public class PickUpFuel : MonoBehaviour
 {
     public Text countText;
-	public Text winText;
+	public Text planeText;
     // Start is called before the first frame update
     private int count;
+    void Start ()
+    {
+        count = 0;
+
+        SetCountText ();
+
+        planeText.text = "";
+    }
+
     void OnTriggerEnter(Collider other) 
 	{
 		// ..and if the game object we intersect has the tag 'Pick Up' assigned to it..
@@ -27,13 +36,13 @@ public class PickUpFuel : MonoBehaviour
     void SetCountText()
 	{
 		// Update the text field of our 'countText' variable
-		countText.text = "Count: " + count.ToString ();
+		countText.text = "Fuel: " + count.ToString () + "/4";
 
 		// Check if our 'count' is equal to or exceeded 12
 		if (count >= 4) 
 		{
 			// Set the text value of our 'winText'
-			winText.text = "You Win!";
+			planeText.text = "You have all the fuel! Get back to the plane!";
 		}
 	}
 }
