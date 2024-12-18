@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class AIController : MonoBehaviour
 {
@@ -24,17 +25,33 @@ public class AIController : MonoBehaviour
 
     void Start()
     {
+        StartCoroutine(InitializeWithDelay());
+    }
+
+    private IEnumerator InitializeWithDelay()
+    {
+        yield return new WaitForSeconds(0.1f); // Short delay to ensure components are initialized
+
         sensor = GetComponent<AISensor>();
         movement = GetComponent<AIMovement>();
         animator = GetComponent<Animator>();
         audioController = GetComponent<AIAudioControllerClown>();
 
-        // Set initial speed
-        movement.SetSpeed(roamSpeed);
+        if (movement != null)
+        {
+            // Set initial speed
+            movement.SetSpeed(roamSpeed);
+        }
+        else
+        {
+            Debug.LogError("AIMovement is not assigned!");
+        }
     }
 
     void Update()
     {
+        if (movement == null) return;
+
         player = sensor.GetPlayer();
 
         if (player != null)
@@ -127,13 +144,11 @@ public class AIController : MonoBehaviour
     {
         if (player == null) return;
 
-        // Calculate direction to face the player
         Vector3 direction = (player.position - transform.position).normalized;
-        direction.y = 0; // Lock rotation to horizontal plane
+        direction.y = 0;
 
         if (direction != Vector3.zero)
         {
-            // Set forward direction and apply manual rotation offset
             transform.forward = direction;
             transform.Rotate(0, 90f, 0); // Fix sideways orientation
         }
